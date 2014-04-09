@@ -18,13 +18,13 @@ Os padrões de design da indústria da programação reenforçarão o conceito b
 
 Linguagens orientadas a objetos possuem algumas caracteristicas:
 
-*Encapsulamento :* Dados podem ser agrupados juntos com funcionalidades que operam direto nesses dados. Essa é, basicamente, a definição de um Objeto.
+**Encapsulamento :** Dados podem ser agrupados juntos com funcionalidades que operam direto nesses dados. Essa é, basicamente, a definição de um Objeto.
 
-*Agregação :* Um objeto pode referenciar outro objeto.
+**Agregação :** Um objeto pode referenciar outro objeto.
 
-*Herança :* Um objeto recém-criado possui as mesmas características que outro objeto sem duplicar as mesmas funcionalidades explicitamente.
+**Herança :** Um objeto recém-criado possui as mesmas características que outro objeto sem duplicar as mesmas funcionalidades explicitamente.
 
-*Polimorfismo :* Uma interface pode ser implementada por multiplos objetos.
+**Polimorfismo :** Uma interface pode ser implementada por multiplos objetos.
 
 JavaScript possue todas essas características, mas como a linguagem não possue o conceito de classes, algumas dessas características não são implementadas da maneira que você imaginaria. A um primeiro olhar, um programa em JavaScript pode até parecer como a programação procedural que você escreveria em C. Se você pode escrever uma função e passar para ela algumas variáveis, você irá ter um script funcional que aparamentemente não possui objetos. Um olhar mais profundo na linguagem, no entanto, revela a existência de objetos através do uso da notação do ponto (.).
 
@@ -88,29 +88,25 @@ Tipos primitivos representam simples pedaços de códigos, que são armazenados 
 
 **Null**		Um tipo primitivo que só possui um valor: ```null```
 
-**Undefined**	Um tipo primitivo que só possui um valor: ```undefined```)undefined é o valor dado a uma variável não inicializada)
+**Undefined**	Um tipo primitivo que só possui um valor: ```undefined```.undefined é o valor dado a uma variável não inicializada)
 
 Os três primeiros tipos (Boolean, number e string) se comportam de forma similar, enquanto os dois últimos (null e undefined) se comportam um pouco diferente, e serão discutidos ao longo desse capítulo. Todos os tipos primitivos possuem representações literais de seus valores. *Literais* representam valores que estão armazenados em uma variável, como um nome ou um preço. Aqui estão alguns exemplos de cada tipo com suas formas literais:
 
 ```js
 
 //strings
-
 var name = "Nicolas";
 var selection = "a";
 
 //number
-
 var count = 25;
 var cost = 1.51;
 
 //boolean
-
 var found = true;
 
 //null
-
-var objetc = null;
+var object = null;
 
 //undefined
 
