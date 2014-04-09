@@ -70,8 +70,51 @@ Trabalhando com objetos e os entender é a chave para entender JavaScript como u
 
 Esse capítulo foca em como identificar e trabalhar com os 2 tipos de dados primários em JavaScript: dados primitivos e dados de referência. Embora ambos são acessados através de objetos, eles se comportam de maneira que fazem com que sejam importante entende-los.
 
-## O que são tipos?
+## O Que São Tipos?
 
 Embora JavaScript não possua o conceito de classes, ele utiliza dois tipos: primitivos e referências. *Tipos primitivos* são armazenados como simples tipos de dados. *Tipos de referência* são armazenados como objetos, que são realmente apenas referências para lugares da memória.
 
 O truque é que JavaScript deixa você tratar tipos primitivos como tipos de referência para fazer com que a linguagem seja mais consistente para o desenvolvedor. Enquanto outras linguagens de programação distinguem entre tipos primitivos e de referência armazenando primitivos em stack e referencia no heap, JavaScript some completamente com esse conceito: Ele procura variáveis para um escopo particular com um **objeto variável**. Valores primitivos são armazenados diretamente no objeto variável, que servem de referência para um lugar na memória onde o objeto está armazenado. No entanto, como você verá mais tarde nesse capítulo, tipos primitivos e de referência se comportam um pouco diferente embora eles possam inicializar da mesma maneira. Claro, ainda há outras diferenças entre tipos primitivos e de referência.
+
+## Tipos Primitivos
+
+Tipos primitivos representam simples pedaços de códigos, que são armazenados de forma "as is", como os valores ```true```ou ```25```. Existem cinco tipos de dados primitivos em JavaScript:
+
+**Boolean**		```true``` ou ```false```
+
+**Number**		Qualquer inteiro ou número em ponto flutuante
+
+**String**		Um caractere ou sequência de caracteres delimitados tanto por aspas simples como aspas duplas
+
+**Null**		Um tipo primitivo que só possui um valor: ```null```
+
+**Undefined**	Um tipo primitivo que só possui um valor: ```undefined```)undefined é o valor dado a uma variável não inicializada)
+
+Os três primeiros tipos (Boolean, number e string) se comportam de forma similar, enquanto os dois últimos (null e undefined) se comportam um pouco diferente, e serão discutidos ao longo desse capítulo. Todos os tipos primitivos possuem representações literais de seus valores. *Literais* representam valores que estão armazenados em uma variável, como um nome ou um preço. Aqui estão alguns exemplos de cada tipo com suas formas literais:
+
+```js
+
+//strings
+
+var name = "Nicolas";
+var selection = "a";
+
+//number
+
+var count = 25;
+var cost = 1.51;
+
+//boolean
+
+var found = true;
+
+//null
+
+var objetc = null;
+
+//undefined
+
+var flag = undefined;
+var ref; //undefined é setado automaticamente
+
+```
