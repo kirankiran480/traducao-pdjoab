@@ -1,4 +1,4 @@
-<img style="display:block;margin:auto;" src="cover2.jpg">
+<img src="cover2.jpg">
 
 ##Tradução do livro "The Principles of Object-Oriented Javascript"
 
@@ -114,3 +114,68 @@ var flag = undefined;
 var ref; //undefined é setado automaticamente
 
 ```
+
+Em JavaScript, como em muitas outras linguagens, variáveis contendo um primitivo diretamente possuem o valor primitivo (em vez de um apontador para um objeto). Quando você define um valor primitivo em uma variável, o valor é copiado para essa variável. Isso significa que se você definir uma variável igual a outra, cada variável irá possuir sua própria cópia do valor. Por exemplo:
+
+```js
+var cor1 = "vermelho";
+var cor2 = cor1;
+```
+
+<img src="objeto.jpg" alt="Objeto Variável">
+
+Aqui, ```cor1``` é definida como ```"vermelho"```. A variável ```cor2``` é então definida como o valor de ```cor1```, o que armazena ```"vermelho"``` em cor2. Embora ```cor1``` e ```cor2``` contenham o mesmo valor, eles são completamente separados um do outro, e você pode mudar o valor de ```cor1``` sem afetar ```cor2``` e vice-versa. Isso acontece porquê são dois lugares diferentes de armazenamento, um para cada variável. A Figura 1.1 ilustra o objeto variável para esse trecho de código.
+
+Pelo motivo de que cada variável que contém um valor primitivo usa seu próprio espaço de armazenamento, alterações em uma variável não afetam a outra.
+Por exemplo:
+
+```js
+var cor1 = "vermelho";
+var cor2 = cor1;
+
+console.log(cor1)  // "vermelho"
+console.log(cor2)  // "vermelho"
+
+cor1 = "azul";
+
+console.log(cor1) // "azul"
+console.log(cor2) // "vermelho"
+```
+
+Nesse código, ```cor1``` é alterada para ```"azul"``` e ```cor2``` permanece com seu valor original ```"vermelho"```
+
+## Identificando Tipos Primitivos
+
+A melhor maneira de identificar tipos primitivos é com o operador ```typeof```, que funciona em qualquer variável e retorna uma string indicando o tipo de dado. O operador ```typeof``` funciona bem com strings, number, Booleans e undefined. O código abaixo mostra a saída quando usando o operador ```typeof``` em diferentes valores primitivos:
+
+```js
+console.log(typeof "Nicolas");  // "string"
+console.log(typeof 10);         // "number"
+console.log(typeof 5.1);        // "number"
+console.log(typeof true);       // "boolean"
+console.log(typeof undefined);  // "undefined"
+```
+Como você ja devia estar esperando, ```typeof```retorna ```"string"``` quando o valor é uma string; ```number``` quando um valor é um número (independente de ser um inteiro ou um float); ```boolean``` quando o valor é um Boolean; e ```undefined```quando o valor é undefined.
+
+A parte confusa envolve o ```null```.
+Você não seria o primeiro desenvolvedor a se confundir com o resultado desta linha de código:
+
+```js
+console.log(typeof null);  // "object"
+```
+
+Quando você executa ```typeof null```o resultado é ```"object"```. Mas porquê um objeto quando o tipo é ```null```? (De fato, isso foi reconhecido como um erro pelo TC39, um comitê que faz o design e mantêm o JavaScript. Você poderia argumentar que ```null``` é uma refêrencia vazia a um objeto, fazendo com que ```object``` seja um valor de retorno correto, porém ainda assim é confuso.)
+A melhor maneira de determinar se um valor é ```null``` é comparar ele com ```null``` direto, como assim:
+
+```js
+console.log(value === null);  // "true" ou "false"
+```
+
+<img src="conversao.png" alt="">
+
+page 26
+
+
+
+
+
