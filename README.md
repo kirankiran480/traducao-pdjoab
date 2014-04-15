@@ -173,7 +173,121 @@ console.log(value === null);  // "true" ou "false"
 
 <img src="conversao.png" alt="">
 
-page 26
+## Metódos Primitivos
+
+Além do fato de que eles são tipos primitivos, strings, numbers e Booleans possuem métodos. (```null``` e ```undefined``` não possuem métodos). Strings, em particular, possuem vários métodos para ajudar você a trabalhar com elas. Por exemplo:
+
+```js
+
+var name = "Nicolas"
+var lowercaseName = name.toLowerCase();   // Converte para minúsculo
+var firstLetter   = name.chartAt(0);      // Pega o primeiro caractere
+var middleOfName  = name.substring(2,5)   // Pega os caracteres de 2 a 4
+
+var count = 10;
+var fixedCount    = count.toFixed(2);     // Converte para "10.00"
+var hexCount      = count.toString(16);   // Converte para "a"
+
+var flag = true;
+var stringFlag    = flag.toString();      // Converte para "true"
+
+```
+
+*Lembre-se que os métodos em tipos primitivos não mudam o contéudo original. Por exemplo: após usar name.toLowerCase(); no exemplo anterior, a variável name original continuará a mesma com uma letra maiuscula. Se você quiser mudar o conteudo, teria que fazer name = name.toLowerCase();*
+
+*Além do fato de eles possuirem métodos, valores primitivos não são objetos. JavaScript faz eles parecerem com objetos para oferecer uma experiência consistente na linguagem, como você verá mais tarde nesse capítulo.*
+
+## Tipos de referência
+
+Tipos de referência representam objetos em JavaScript e eles são as coisas mais próximas de classes que você irá encontrar na linguagem. Valores de referência são *instâncias* de tipos de referência e são sinônimos de objetos (o resto desse capítulo referência valores de referência simplesmente como *objetos*). Um objeto é uma lista desordenada de propriedades consistindo de um nome (sempre uma string) e um valor. Quando o valor de uma propriedade é uma função, ela é chamada de *método*. As funções propriamente ditas são na verdade valores de referência em JavaScript, então há pouca diferença em uma propriedade que contém um array e uma que contém uma função exceto que a função pode ser executada.
+E claro, você precisa criar objetos antes de começar a trabalhar com eles.
+
+### *Criando Objetos* 
+
+<img src="objectStruture.jpg" alt="">
+
+
+Às vezes ajuda a pensar em objetos de JavaScript como nada mais que uma tabela de valores, como na figura 1-2.
+Existem algumas maneiras de criar, ou *instanciar* um objeto. O primeiro é usar o operador ```new``` com um construtor. (Um construtor é simplesmente uma função que usa ```new``` para criar um objeto -- qualquer função pode ser um construtor.) Pela convenção, construtores em JavaScript iniciam com uma letra maiúscula para distinguir de funções que não são construtoras. Por exemplo, esse código instancia um objeto genérico e armazena a referência a ele em ```object```:
+
+```js
+var objeto = new Object();
+```
+
+Tipos de referência não armazenam o objeto diretamente na variável em que são definidas, então a variável ```objeto``` nesse exemplo não contém a instância de objeto. Em vez disso, ela possui um apontador (ou referência) para o lugar da memória onde esse objeto existe. Essa é a principal diferença entre objetos e valores primitivos, pois valores primitivos são armazenados diretamente na variável em que são definidos. Quando você define um objeto em uma variável, você está na verdade definindo uma referência a esse objeto (como um ponteiro). Isso significa que se você definir uma variável em outra, cara variável possue uma cópia dessa referência, e ambos referenciam o mesmo objeto na memória. Por exemplo:
+
+```js
+var objeto1 = new Object();
+var objeto2 = objeto1;
+```
+Esse código primeiro cria um objeto (com ```new```) e então armazena a referência em ```objeto1```. Depois, ```objeto2``` é definido como o valor de ```objeto1```. Ainda há somente a única instância do objeto que foi criado na primeira linha, mas ambas variáveis agora apontam para esse objeto, como na figura 1-3:
+
+<img src="pointing.jpg" alt="Estrutura de um Objeto">
+
+### *Desreferênciando objetos*
+
+JavaScript possui um coletor de lixo, então você não precisa  realmente se preocupar com alocações de memória quando você usar tipos de referência. Entretanto, é melhores *desreferênciar* objetos que você não precisa mais para que o coletor de lixo possa liberar aquela memória. A melhor maneira de fazer isso é definir a variável do objeto como ```null```.
+
+```js
+
+var objeto1 = new Object();
+
+//faça algo
+
+objeto1 = null;    //desreferência
+
+```
+
+Aqui, ```objeto1``` é criado e usado antes de finalmente ser definido como ```null```. Quando não há mais referências para um objeto na memória, o coletor de lixo pode usar aquela memória para algo diferente. (Desreferênciar objetos é especialmente importante em grandes aplicações que usam milhões de objetos.)
+
+### *Adicionando ou Removendo Propriedades*
+
+Outro aspecto interessante de objetos em JavaScript é que você pode adicionar ou remover propriedades a hora que quiser. Por exemplo:
+
+```js
+
+var objeto1 = new Object();
+var objeto2 = objeto1;
+
+objeto1.minhaPropriedade = "Incrível!";
+console.log(objeto2.minhaPropriedade);   // "Incrível!"
+```
+
+Aqui, ```minhaPropriedade``` é adicionada a objeto1 com o valor de "Incrível!". Essa propriedade também é acessível em ```objeto2``` porque ambos ```objeto1``` e ```objeto2``` apontam para o mesmo objeto.
+
+*Esse exemplo demonstra uma particularidade única de JavaScript: você pode modificar objetos quando você quiser, mesmo se você não definiu eles em primeiro lugar. Existem maneiras de previnir essas modificações, como você verá mais a frente nesse livro*
+
+Além dos tipos de referência genéricos, JavaScript possui outros tipos próprios da linguagem ao seu dispor.
+
+## Instânciando Tipos Próprios
+
+Você viu como criar e interagir com objetos genéricos criados com ```new Object()```. O tipo ```Object``` é somente uma de uma larga variedade de tipos de referência que JavaScript dispoe. Os outros tipos próprios são mais especializados em seu uso pretendido e podem ser instânciados a qualquer hora. Os tipos próprios são:
+
+**Array**:    Uma lista ordenada numericamente de valores indexados
+**Date**:     Uma data e uma hora
+**Error**:    Um erro de execução (existem mais subtipos de error)
+**Function**: Uma função
+**Object**:   Um objeto genérico
+**RegExp**:   Uma expressão regular
+
+Você pode instânciar cada tipo próprio usando ```new```, como mostrado aqui:
+
+```js
+
+var itens  = new Array();
+var agora  = new Date();
+var erro   = new Error("Algo errado aconteceu");
+var func   = new Function("console.log("hi")";);
+var objeto = new Object();
+var re     = new RegExp("\\d+");
+
+```
+
+### *Formas literais*
+
+A maioria dos tipos próprios possuem formas literais. Uma forma *literal* é uma sintaxe que permite você definir um valor de referência sem criar um objeto explicitamente, usando o operador ```new```
+
+
 
 
 
