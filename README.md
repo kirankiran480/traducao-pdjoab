@@ -285,11 +285,124 @@ var re     = new RegExp("\\d+");
 
 ### *Formas literais*
 
-A maioria dos tipos próprios possuem formas literais. Uma forma *literal* é uma sintaxe que permite você definir um valor de referência sem criar um objeto explicitamente, usando o operador ```new```
+A maioria dos tipos próprios possuem formas literais. Uma forma *literal* é uma sintaxe que permite você definir um valor de referência sem criar um objeto explicitamente, usando o operador ```new``` e o objeto construtor. (Antes, nesse capítulo, você viu exemplos de literais primitivos incluindo strings literais, literais numéricos, literais booleanos, o literal ```null```, e o literal ```undefined```).
 
+### *Literais de Objetos e Arrays*
 
+Para criar um objeto com a sintaxe de objeto literal, você pode definir as propriedades de um novo objeto dentro de chaves. Propriedades são feitas de um identificador ou string, dois pontos, e um valor, sendo várias propriedades divididas com vírgula. Por exemplo:
 
+```js
 
+var livro = {
+	nome: "Os Princípios da orientação a objetos em JavaScript",
+	ano: 2014
+};
 
+```
 
+Você também pode usar strings literais para nomes de propriedades, o que é muito útil se você quer definir o nome de uma propriedade com espaços ou caracteres especiais:
 
+```js
+
+var livro = {
+	"nome": "Os Princípios da orientação a objetos em JavaScript",
+	"ano": 2014
+};
+
+```
+Esse exemplo é equivalente ao anterior, apesar das diferenças sintáticas. Ambos os exemplos também são logicamente equivalentes a esse:
+
+```js
+var livro = new Object();
+livro.nome = "Os Princípios da orientação a objetos em JavaScript";
+livro.ano = 2014;
+
+```
+O resultado final de cada um dos três exemplos anteriores são os mesmos: um objeto com duas propriedades. A escolha do padrão a ser usado é deixada para você, porquê as funcionalidades são as mesmas.
+
+*Usar um literal de objeto não chama propriedade ```new Object()```. Em vez disso, a engine do JavaScript segue os mesmos passos de quando usa ```new Object()``` sem chamar o construtor. Isso se repete em todas as formas literais.*
+
+Você pode definir um literal de array de forma semelhante colocando qualquer número de valores separados por vírgula dentro de colchetes. Por exemplo:
+
+```js
+
+var cores = [ "vermelho", "azul", "verde" ];
+console.log(cores[0]);   // "vermelho"
+
+```
+Esse código é o equivalente a esse:
+
+```js
+
+var cores = new Array("vermelho", "azul", "verde");
+console.log(cores[0])    // "vermelho"
+
+```
+### *Literais de Funções*
+
+Você quase sempre define funções usando sua forma literal. De fato, usar o construtor ```Function``` é normalmente desaconselhado por ser mais dificil de manter, ler e debugar uma string de código do que o código em si.
+Criar funções são muito mais simples e menos propensas a erro usando sua forma literal. Por exemplo:
+
+```js
+
+function reflect(value) {
+	return value;
+}
+
+// é a mesma coisa que:
+
+var reflect = new Function("value", "return value;");
+
+```
+
+Esse código define a função ```reflect()```, que retorna qualquer valor passado a ela. Mesmo no caso dessa função simples, a forma literal é mais fácil de escrever e entender do que usando a forma do construtor. Além disso, não há maneira eficiente de debugar funções que são criadas com a forma do construtor: Essas funções não são reconhecidas por debugadores de JavaScript fazendo assim com que ajam como caixas pretas na sua aplicação.
+
+### Literais de Expressões Regulares
+
+JavaScript também possui literais para expressões regulares que permitem a você definir expressões regulares sem usar o construtor ```RegExp```. Literais de expressões regulares se parecem muito com as expressões regulares em Perl: a expressão é contida dentro de duas barras, e qualquer opção adicional é uma única letra após a segunda barra. Por exemplo:
+
+```js
+
+var numeros = /\d+/g;
+
+// é o mesmo que:
+
+var numeros = new RegExp("\\d+", "g");
+
+```
+
+A forma literal de expressões regulares em JavaScript são melhores de lidar do que usar a forma do construtor porquê você não precisa se preocupar com caracteres de escape dentro de strings. Quando usando o construtor ```RegExp```, você passa a expressão em uma string, então você precisa usar o escape em qualquer barra invertida (esse é o motivo de ```\d``` ser usado na forma literal e ```\\d``` no construtor).
+Literais de expressões regulares são preferíveis no lugar da forma do do construtor exceto quando a expressão regular está sendo construido dinamicamente de uma ou mais strings.
+Dito isso, com exceção de ```Function```, não há realmente uma maneira certa ou errada de instanciar tipos próprios. Muitos desenvolvedores preferem literais, enquanto outros preferem construtores. Escolha o método que você se sentir mais confortável em usar.
+
+## Acesso de Propriedades
+
+Propriedades são pares de nomes/valores que são armazenados em um objeto. A notação de ponto é a forma mais comum de acessar propriedades em JavaScript (e em muitas linguagens orientadas a objetos), mas você pode também acessar propriedades em JavaScript usando a notação de colchetes com uma string.
+Por exemplo, você poderia escrever esse código, que usa a notação de ponto:
+
+```js
+
+var array = [];
+array.push(12345);
+
+```
+
+Com a notação de colchetes, o nome do método é agora incluído em uma string dentro de colchetes, como no exemplo:
+
+```js
+
+var array= [];
+array["push"](12345);
+
+```
+Essa sintaxe é muito útil quando você decidir dinamicamente qual propriedade acessar. Por exemplo, aqui a notação de colchetes permite você usar uma variável em vez de uma string literal para especificar a propriedade a ser acessada:
+
+```js
+
+var array = [];
+var methor = "push";
+array[method](12345);
+
+```
+
+Nesse exemplo, a variável ```method``` tem o valor de ```"push"```, então ```push()``` será chamada no array. Essa funcionalidade é muito útil, como você verá mais a frente nesse livro. O que é preciso ser lembrado é que, além da sintaxe, a única diferença entre a notação de ponto e a notação de colchetes é que a notação de colchetes permite a você usar caracteres especiais em nomes de propriedades. Desenvolvedores normalmente acham a notação de ponto mais fácil de ler, então você verá ela sendo mais usada que a notação de colchetes.
