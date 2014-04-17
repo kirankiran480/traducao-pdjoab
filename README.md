@@ -400,9 +400,188 @@ Essa sintaxe é muito útil quando você decidir dinamicamente qual propriedade 
 ```js
 
 var array = [];
-var methor = "push";
+var method = "push";
 array[method](12345);
 
 ```
 
 Nesse exemplo, a variável ```method``` tem o valor de ```"push"```, então ```push()``` será chamada no array. Essa funcionalidade é muito útil, como você verá mais a frente nesse livro. O que é preciso ser lembrado é que, além da sintaxe, a única diferença entre a notação de ponto e a notação de colchetes é que a notação de colchetes permite a você usar caracteres especiais em nomes de propriedades. Desenvolvedores normalmente acham a notação de ponto mais fácil de ler, então você verá ela sendo mais usada que a notação de colchetes.
+
+## Identificando Tipos de Referência
+
+Uma função é o tipo de referência mais fácil de identificar porque quando você usa o operador ```typeof``` em uma função, ele deve retornar ```"function"```:
+
+```js
+
+function reflect(value) {
+	return value;
+}
+
+console.log(typeof reflect);     // "function"
+
+```
+Outros tipos de referência podem ser difíceis de identificar porque, para qualquer outros tipos de referência que não sejam funções, o operador ```typeof``` retorna ```"object"```.
+Isso não é de grande ajuda quando você está lidando com vários tipos diferentes. Para identificar tipos de referencia mais facilmente, você pode usar o operador ```instanceof``` de JavaScript.
+O operador ```instanceof``` pega um objeto e um construtor como parâmetros. Quando o valor é do tipo do construtor especificado, o operador ```instanceof``` retorna ```true```. Caso contrário, ele retorna ```false```, como você pode ver aqui:
+
+```js
+
+var items = [];
+var object = {};
+
+function reflect(value) {
+	return value;
+}
+
+console.log(items instanceof Array);      	// true
+console.log(object instanceof Object);    	// true
+console.log(reflect instanceof Function); 	// true
+
+```
+
+Nesse exemplo, diversos valores são testados usando ```instanceof``` e um construtor. Cada tipo de referência é identificado corretamente usando o operador ```instanceof``` e um construtor que representa seu tipo verdadeiro (mesmo que o construtor não seja usado na criação da variável).
+
+O operador ```instanceof``` pode identificar tipos herdados. Isso significa que cada objeto é na verdade uma instância de ```Object``` porquê cada tipo de referência herda de ```Object```. Para demonstrar, o próximo exemplo examina as três referências criadas anteriormente com ```instanceof```:
+
+```js
+
+var items = [];
+var object = {};
+
+function reflect(value) {
+	return value;
+}
+
+console.log(items instanceof Array);             	// true
+console.log(items instanceof Object); 		 		// true
+console.log(object instanceof Object);				// true
+console.log(object instanceof Array);				// false
+console.log(reflect instanceof Function);			// true
+console.log(reflect instanceof Object);				// true
+
+```
+
+Cada tipo de referência é identificado corretamente como instância de ```Object```, da qual todos os tipos de referência são herdados.
+
+## Identificando Arrays
+
+Embora ```instanceof``` possa identificar arrays, há uma exceção que afeta desenvolvedores web: valores em JavaScript podem ser passados entre <frame> na mesma página. Isso se torna um problema somente quando você tenta identificar o tipo de um valor de referência, porque cada página possui seu próprio contexto global - sua própria versão de ```Object```,```Array```, e todos os outros tipos próprios. Como resultado, quando você passa um array de um frame para outro, ```instanceof``` não funciona porquê o array é na verdade uma instância de ```Array``` de uma frame diferente.
+Para corrigir esse problema, ECMAScript 5 introduziu ```Array.isArray()```, o qual identifica definitivamente se o valor é uma instância de ```Array``` sem se importar com seu valor de origem. Esse método deve retornar ```true``` quando recebe um valor que é um array nativo de qualquer contexto. Se o seu ambiente de desenvolvimento suporta ECMAScript 5, ```Array.isArray()``` é o melhor jeito de identificar arrays:
+
+```js
+
+var items = [];
+
+console.log(Array.isArray(items));    //true
+
+```
+O método ```Array.isArray()``` é suportado na maioria dos ambientes de desenvolvimentos, ambos em browsers e em Node.js. Esse método não é suportado no Internet Explorer 8 e anteriores.
+
+## Tipos Wrapper Primitivos
+
+Talvez uma das partes mais confusas de JavaScript é o conceito de *tipos wrapper primitivos*. Existem três tipos wrapper primitivos: ```String```, ```Number``` e ```Boolean```. Esses tipos de referência especiais existem para fazer com que trabalhar com valores primitivos sejam tão fáceis como trabalhar com objetos (seria muito confuso se você tivesse que usar uma sintaxe diferente ou trocar para o estilo de programação procedural somente para pegar uma substring de um texto).
+Os tipos wrapper primitivos são tipos de referência que são criados automaticamente por baixo dos panos sempre que strings, numbers ou Booleans são lidos. Por exemplo, na primeira linha do próximo exemplo, um valor primitivo de string é definido em ```nome```. A segunda linha trata ```nome``` como um objeto e chama ```charAt(0)``` usando a notação de ponto:
+
+```js
+
+var nome = "Nicolas";
+var primeiroCaractere = nome.charAt(0);
+console.log(primeiroCaractere);               // "N"
+
+```
+
+Isso é o que acontece em baixo dos panos:
+
+```js
+
+// O que a engine de JavaScript faz
+var nome = "Nicolas";
+var temp = new String(name);
+var primeiroCaractere = temp.charAt(0);
+temp = null;
+console.log(primeiroCaractere);     		   // "N"
+
+```
+
+Porquê a segunda linha (do primeiro exemplo) usa uma string (que é um primitivo) como um objeto, a engine de JavaScript cria uma instância de ```String``` para que então ```charAt(0)``` funcione. O objeto ```String``` existe somente em uma instrução antes de ser destruído (um processo chamado de *autoboxing*). Para testar isso, tente adicionar uma propriedade em uma string como se ela fosse um objeto comum:
+
+```js
+
+var nome = "Pietro";
+nome.sobrenome = "Pereira";
+
+console.log(nome.sobrenome);				// undefined
+
+```
+
+Esse código tenta adicionar a propriedade ```sobrenome``` na string ```nome```. O código funciona normalmente exceto que a propriedade desaparece. O que aconteceu? Quando trabalhando com objetos, você pode adicionar propriedades a qualquer hora e elas irão continuar lá até você remover elas manualmente. Com tipos wrapper primitivos, propriedades parecem desaparecer porquê o objeto em que a propriedade foi definida foi destruido imediatamente depois.
+
+Aqui está o que realmente aconteceu na engine do JavaScript:
+
+```js
+
+// O que a engine do JavaScript faz
+var nome = "Pietro":
+var temp = new String(nome);
+temp.sobrenome = "Pereira";
+temp = null;
+
+var temp = new String(nome);
+console.log(temp.sobrenome);
+temp = null;
+
+```
+
+Em vez de definir uma nova propriedade para a string, o código na verdade cria uma nova propriedade em um objeto temporário e então é destruído. Quando você tenta acessar aquela propriedade depois, um objeto temporário diferente é criado e a nova propriedade não existe nele. Embora valores de referência são criados automaticamente para valores primitivos, quando ```instanceof``` checa o tipo desses valores, o resultado é ```false```:
+
+```js
+
+var nome = "Pietro";
+var count = 10;
+var found = false;
+
+console.log(nome instanceof String);		// false
+console.log(count instanceof Number);		// false
+console.log(found instanceof Boolean);		// false
+
+```
+
+O operador ```instanceof``` retorna ```false``` porquê um objeto temporário é criado somente quando um valor é lido. E porquê ```instanceof``` na verdade não lê nada, nenhum objeto temporário é criado, e ele nos diz que esses valores não são instâncias de tipos wrapper primitivos. Você pode criar tipos wrapper primitivos manualmente, mas há alguns efeitos colaterais:
+
+```js
+
+var nome = new String("Pietro");
+var count = new Number(10);
+var found = new Boolean(false);
+
+console.log(typeof nome);			// "object"   			
+console.log(typeof count);			// "object" 
+console.log(typeof found);			// "object" 
+
+
+```
+
+Como você pode ver, criar uma instância de um tipo wrapper primitivo apenas cria outro objeto, o que significa que ```typeof``` não pode identificar o tipo de dado que você pretende armazenar.
+Além de que você não pode usar ```String```, ```Number``` ou ```Boolean``` como você usaria valores primitivos. Por exemplo, o próximo código usa um objeto ```Boolean```. O objeto ```Boolean``` é falso, ainda assim ```console.log("Found")``` ainda é executado porquê um objeto sempre será considerado ```true``` dentro de instruções condicionais. Não importa se o objeto representa ```false```, ele é um objeto, então será validado como ```true```.
+
+```js
+
+var found = new Boolean(false);
+
+if (found) {
+	console.log("Found");     // isso é executado
+}
+
+```
+
+Instânciar manualmente tipos wrapper primitivos também pode ser confuso de outras maneiras, a menos que você ache um caso especial onde faz sentido fazer isso, você deve evitar. Na maioria dos casos, usar objetos wrappers primitivos em vez de primitivos somente leva a cometer erros.
+
+## Sumário
+
+Embora JavaScript não possua classes, ele possui tipos. cada variável ou pedaço de dado é associado a um tipo primitivo ou de referência específico. Os cinco tipos primitivos (strings, numbers, Booleans, null e undefined) representam valores simples armazenados diretamente no objeto variável em um determinado contexto. Você pode usar ```typeof``` para identificar tipos primitivos com exceção de ```null```, o qual deve ser comparado diretamente com o valor especial ```null```. 
+Tipos de referência são a coisa mais próxima de classes em JavaScript, e objetos são instâncias de tipos de referências. Você pode criar novos objetos usando o operador ```new``` ou uma forma literal. Você pode acessar propriedades e métodos usando a notação de ponto ou colchetes. Funções são objetos em JavaScript, e você pode identificar elas usando o operador ```typeof```. Você deve usar o operador ```instanceof``` com um construtor para identificar objetos de outros tipos de referência.
+Para fazer com que primitivos se pareçam com referências, JavaScript possui três tipos wrapper primitivos: ```String```, ```Number``` e ```Boolean```. JavaScript cria esses objetos por baixo dos panos para que você possa tratar primitivos como objetos regulares, mas objetos temporários são destruidos assim que a instrução que usa ele é completada. Embora você possa criar suas próprias instâncias de wrappers primitivos, é melhor não fazer isso porque pode ser confuso.
+
+
+# Funções
+
