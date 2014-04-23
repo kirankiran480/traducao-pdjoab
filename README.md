@@ -585,3 +585,126 @@ Para fazer com que primitivos se pareçam com referências, JavaScript possui tr
 
 # Funções
 
+Como discutido no capítulo 1, funções são em JavaScript, na verdade, objetos. A definição característica de uma função - o que distingue ela dos outros objetos - é a presença de uma *propriedade interna* chamada ```[[Call]]```. Propriedades internas não são acessíveis pelo código mas elas definem o comportamento do código a medida que são executadas. ECMAScript define múltiplas propriedades internas para objetos em JavaScript, e essa propriedades são indicadas pela notação de colchetes duplo.
+A propriedade ```[[Call]]``` é única de funções e indica que o objeto pode ser executado. Como somente funções possuem essa propriedade, o operador ```typeof``` é definido pela ECMAScript para retornar ```"function"``` para qualquer objeto com a propriedade ```[[Call]]```. Isso levou a uma confusão no passado, porque alguns browsers também incluiram a propriedade ```"[[Call]]"``` para expressões regulares, que eram identificadas erradamente como funções. Todos os browsers agora se comportam da mesma maneira, então o operador ```typeof``` não identifica mais expressões regulares como funções.
+Esse capítulo discute as diferentes maneiras em que funções são definidas e executadas em JavaScript. Como funções são objetos, elas se comportam diferente de funções em outras linguagens, e entender esse comportamento é fundamental para um bom entendimento de JavaScript.
+
+## Declarações vs. Expressões
+
+Atualmente existem duas formas literais de funções. A primeira é a *declaração de função*, que começa com a palavra-chave ```function``` e inclui o nome da função em seguida. O conteúdo da função é incluso dentro de chaves, como mostrado nessa declaração:
+
+```js
+
+function add(num1, num2) {
+	return num1 + num2;
+}
+
+```
+
+A segunda forma é a *expressão de função*, que não requer um nome após a palavra-chave ```function```. Essas funções são consideradas anônimas porquê o objeto de função propriamente dito não possui nome. Em vez disso, expressões de funções são tipicamente referenciadas por uma variável ou propriedade, como nessa expressão:
+
+```js
+
+var add = function(num1, num2) {
+	return num1 + num2;
+};
+
+```
+
+Esse código define um valor de função para a variável ```add```. As duas formas são quase idênticas, exceto pela ausência de nome para função e o ponto e vírgula necessário no final da expressão de função.
+Apesar de essas duas formas serem parecidas, elas se diferem fortemente de um jeito. Declarações de funções são içadas*(hoisted)* para o topo do contexto (tanto na função em que a declaração ocorre ou no escopo global) quando o código é executado. Isso significa que você pode definir uma função depois de usá-la sem gerar um erro. Por exemplo:
+
+```js
+
+var result = add(5, 5);
+
+function add(num1, num2) {
+	return num1 + num2;
+}
+
+```
+
+Esse código parece que irá causar um erro, mas funciona perfeitamente. Isso é porque a engine de JavaScript iça a declarão de função para o topo e executa o código como se fosse escrito dessa maneira:
+
+```js
+
+// Como a engine de JavaScript interpreta o código
+
+function add(num1, num2) {
+	return num1 + num2;
+}
+
+var result = add(5, 5);
+
+```
+
+Içamento de funções ocorrem somente em declarações de funções porque o nome da função ja é sabido. Expressões de funções, ao contrário, não podem ser içadas porque elas só podem ser referenciadas através de uma variável. Então esse código irá causar um erro:
+
+```js
+
+// Erro!
+
+var result = add(5, 5);
+
+var add = function(num1, num2) {
+	return num1 + num2;
+};
+
+```
+
+Contanto que você sempre defina funções antes de usá-las, você pode usar tanto declarações ou expressões de funções.
+
+## Funções como valores
+
+Como JavaScript possui funções de primeira-classe, você pode usar elas assim como usaria qualquer objeto. Você pode defini-las em variáveis, adicioná-las em objetos, ou passar elas para outras funções através de argumentos, e retornar elas de funções. Isso faz com que JavaScript seja incrivelmente poderoso. Considere o exemplo a seguir:
+
+```js
+
+function digaOi() {
+	console.log("Oi!");
+}
+
+var digaOi2 = digaOi;
+
+digaOi2();    // imprime "Oi!";
+
+```
+
+Nesse código, há uma declaração de função em ```digaOi```. Uma variável chamada ```digaOi2``` é criada e seu valor é definido como o valor de ```digaOi```. Ambas ```digaOi``` e ```digaOi2``` apontam para a mesma função, e isso significa que ambas podem ser executadas com o mesmo resultado. Para entender porquê isso funciona, vamos olhar o mesmo código reescrito para usar o construtor ```Function```:
+
+```js
+
+var digaOi = new Function ("console.log(\"Hi!\");");
+
+digaOi();     // imprime "Oi!"
+
+var digaOi2 = digaOi;
+
+digaOi2();    // imprime "Oi!"
+
+```
+
+O construtor ```Function``` deixa mais implícito que ```digaOi``` pode ser passada como qualquer outro objeto. Quando você ter em mente que funções são objetos, muitos comportamentos começam a fazer sentido.
+Por exemplo, você pode passar uma função em outra função como um argumento. O método ```sort()``` das arrays em JavaScript aceita uma função de comparação como um parâmetro opcional. A função de comparação é chamada sempre que dois valores de um array precisam ser comparados. Se o primeiro valor é menor que o segundo, a função de comparação deve retornar um número negativo. Se o primeiro valor é maior que o segundo, a função retorna um número positivo. Se os dois valores são iguais, a função retorna zero.
+Por padrão, ```sort()``` converte cada item de um array em uma string e então faz a comparação. Isso significa que você não pode ordernar precisamente um array de números sem especificar uma função de comparação. Por exemplo, você precisa incluir uma função de comparação para ordernar um array número precisamente, como essa:
+
+```js
+
+var numeros = [ 1, 5, 8, 4, 7, 10, 2, 6];
+1) numeros.sort(function(primeiro,segundo) {
+	return primeiro - segundo;
+});
+
+console.log(numeros);   // "[1, 2, 4, 5, 6, 7, 8, 10]"
+
+2) numeros.sort();
+console.log(numeros);   // "[1, 10, 2, 4, 5, 6, 7, 8]"
+
+```
+
+Nesse exemplo, a função de comparação 1) que é passada para ```sort()``` é na verdade uma expressão de função. Note que não há nome para a função, ela existe somente como referencia que é passada para outra função (fazendo dela uma *função anônima*). Subtraindo os dois valores retorna o resultado correto da comparação da função.
+
+Compare com a chamada 2) para ```sort()```, que não usa uma função de comparação. A ordenação do array é diferente do esperado, como 1 é seguido por 10. Isso ocorre porquê a comparação padrão converte valores em strings antes de compará-los.
+
+pag 21
+
