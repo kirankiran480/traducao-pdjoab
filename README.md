@@ -706,5 +706,11 @@ Nesse exemplo, a função de comparação 1) que é passada para ```sort()``` é
 
 Compare com a chamada 2) para ```sort()```, que não usa uma função de comparação. A ordenação do array é diferente do esperado, como 1 é seguido por 10. Isso ocorre porquê a comparação padrão converte valores em strings antes de compará-los.
 
-pag 21
+## *Parâmetros*
 
+Outro aspecto único de JavaScript é que você pode passar qualquer número de parâmetros em qualquer função sem causar erro. Isso porquê parâmetros de funções são na verdade armazenados em uma estrutura semelhante as arrays chamada ```arguments```. Como uma array comum em JavaScript, ```arguments``` pode receber qualquer número de valores. Os valores são referênciados através de índices numéricos, e há a propriedade ```length``` para determinar quantos valores estão presentes.
+O objeto ```arguments``` é automaticamente disponível dentro de qualquer função. Isso significa que parâmetros com nomes em uma função existem apenas para conveniência e na verdade não limitam o número de argumentos que uma função pode aceitar.
+
+* Nota: o objeto ```arguments``` não é uma instância de ```Array``` e portanto não possui os mesmos métodos de um array. ```Array.isArray(arguments)``` sempre irá retornar ```false```. *
+
+Porém JavaScript também não ignora os parâmetros com nomes de uma função. O número de argumentos que uma função espera é armazenado na propriedade ```length``` da função. Lembre-se, uma função é na verdade um objeto, então ela pode ter propriedades. A propriedade ```length``` indica o **arity** da função, ou o número de parâmetros que ela espera.
