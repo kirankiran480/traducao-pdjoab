@@ -713,4 +713,24 @@ O objeto ```arguments``` é automaticamente disponível dentro de qualquer funç
 
 * Nota: o objeto ```arguments``` não é uma instância de ```Array``` e portanto não possui os mesmos métodos de um array. ```Array.isArray(arguments)``` sempre irá retornar ```false```. *
 
-Porém JavaScript também não ignora os parâmetros com nomes de uma função. O número de argumentos que uma função espera é armazenado na propriedade ```length``` da função. Lembre-se, uma função é na verdade um objeto, então ela pode ter propriedades. A propriedade ```length``` indica o **arity** da função, ou o número de parâmetros que ela espera.
+Porém JavaScript também não ignora os parâmetros com nomes de uma função. O número de argumentos que uma função espera é armazenado na propriedade ```length``` da função. Lembre-se, uma função é na verdade um objeto, então ela pode ter propriedades. A propriedade ```length``` indica o *arity* da função, ou o número de parâmetros que ela espera. Saber o arity de funções é importante em JavaScript porquê funções não lançarão um erro se você passar muitos ou poucos parâmetros nelas.
+O próximo exemplo é um simples uso de ```arguments``` e do arity da função; note que o número de argumentos passados para a função não tem efeito no arity que foi printado:
+
+```js
+function reflect(value) {
+	return value;
+}
+
+console.log(reflect("Oi!"));     	// "Oi!"
+console.log(reflect("Oi!", 25)); 	// "Oi!"
+console.log(reflect.length);     	// 1
+
+reflect = function() {
+	return arguments[0]
+};
+
+console.log(reflect("Oi!"));     	// "Oi!"
+console.log(reflect("Oi!", 25)); 	// "Oi!"
+console.log(reflect.length);     	// 0
+
+```
