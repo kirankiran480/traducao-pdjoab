@@ -734,3 +734,31 @@ console.log(reflect("Oi!", 25)); 	// "Oi!"
 console.log(reflect.length);     	// 0
 
 ```
+Esse exemplo primeiro define a função ```reflect()``` usando apenas um parâmetro nomeado, mas não  há erro quando o segundo parâmetro é passado para a função. A propriedade ```length``` é ```1``` porquê há somente um parâmetro nomeado. A função ```reflect()``` é então redefinida sem parâmetros nomeados; ela retorna ```arguments[0]```, que é o primeiro argumento que é passado pra uma função. Essa função redefinida funciona como a anterior, com a diferença de que ```length``` agora é ```0```.
+
+A primeira versão da função ```reflect()``` é muito mais fácil de entender porquê ela usa um argumento com nome (como você faria em outras linguagens). A versão que o objeto ```arguments``` pode ser confusa porquê não há argumentos com nome, e você precisa ler o corpo da função para determinar se argumentos estão sendo usados. Esse é o motivo de muitos desenvolvedores preferirem evitar usar ```arguments``` a menos que seja necessário.
+Em algumas ocasiões, porém, usar ```arguments``` é mais efetivo que parâmetros nomeados. Suponha que você queira criar uma função que aceita qualquer número de parâmetros e retorne a soma deles. Você não pode usar parâmetros nomeados porquê você não sabe de quantos você irá precisar, então nesse caso, usar ```arguments``` é a melhor opção:
+
+```js
+function sum() {
+	
+	var result = 0,
+		i = 0,
+		len = arguments.length;
+
+	while (i < len) {
+		result += arguments[i];
+		i++;
+	}
+
+	return result;
+}
+
+console.log(sum(1, 2));			// 3
+console.log(sum(3, 4, 5, 6));	// 18
+console.log(sum(50));			// 50
+console.log(sum());				// 0
+
+```
+
+A função ```sum()``` aceita qualquer número de parâmetros e adiciona eles por interagir com os valores em ```arguments``` com um loop ```while```. Isso é fazer exatamente a mesma coisa como se você tivesse que adicionar os valores de uma array de números. A função funciona mesmo se nenhum parâmetro é passado, porque a variável ```result``` é inicializada com o valor de ```0```.
