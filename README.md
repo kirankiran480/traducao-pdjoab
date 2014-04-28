@@ -762,3 +762,38 @@ console.log(sum());				// 0
 ```
 
 A função ```sum()``` aceita qualquer número de parâmetros e adiciona eles por interagir com os valores em ```arguments``` com um loop ```while```. Isso é fazer exatamente a mesma coisa como se você tivesse que adicionar os valores de uma array de números. A função funciona mesmo se nenhum parâmetro é passado, porque a variável ```result``` é inicializada com o valor de ```0```.
+
+## Sobreposição
+
+A maioria das linguagens orientadas a objetos possuem suporte a *sobreposição de função*, que é a possibilidade de uma função poder possuir diversar *assinaturas*. Uma assinatura de uma função é feito do nome da função mais o número e tipo de parâmetros que uma função espera.
+
+Assim, uma função pode ter uma assinatura que aceita uma string como argumento e outra que aceita 2 números como argumento. A linguagem determina qual versão da função será chamada com base nos argumentos que foram passados.
+Como mencionado anteriormente, funções em JavaScript aceitam qualquer número de parâmetros, e os tipos de parâmetros que uma função aceitas não são especificados. Isso significa que em JavaScript, funções não possuem assinaturas. A falta de assinaturas também significa a falta de sobreposição de função. Olhe o que acontece quando você tenta declarar duas funções com o mesmo nome:
+
+```js
+
+function repitaMensagem(mensagem) {
+	console.log(mensagem);
+}
+
+function repitaMensagem() {
+	console.log("Mensagem Padrão");
+}
+
+
+repitaMensagem("olá!")					// imprime "Mensagem Padrão"
+
+```
+
+Se fosse em outra linguagem, a saída de ```repietaMensagem("olá!")``` seria provavelmente ```"olá!"```. Em JavaScript, no entanto, quando você define múltiplas funções com o mesmo nome, a que aparece em último no seu código vence. A função declarada antes é completamente removida, e a última é usada. Mais uma vez, ajuda pensar nessa situação usando objetos:
+
+```js
+
+var repitaMensagem = new Function("mensagem","console.log(mensagem);");
+
+repitaMensagem = new Function("console.log(\"Mensagem Padrão\");");
+
+repitaMensagem("olá!"); 				// imprime "Mensagem Padrão"
+
+```
+
